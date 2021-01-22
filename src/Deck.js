@@ -25,7 +25,7 @@ const BASE_URL = "https://deckofcardsapi.com/api/deck";
  * App -> Deck -> Card
  **/
 
-function Deck({ deckCount = 1 }) {
+function Deck() {
   const [isLoading, setIsLoading] = useState(true);
   const [deck, setDeck] = useState(null);
   const [cards, setCards] = useState([]);
@@ -34,11 +34,9 @@ function Deck({ deckCount = 1 }) {
   console.debug("rendering cards= ", cards);
   console.debug("rendering shouldDraw= ", shouldDraw);
 
-
-
   /** Fetch a new deck id and meta info about deck 
    * when component renders the first time 
-   **/  
+   **/
   useEffect(function fetchNewDeckOnMount() {
 
     async function fetchNewDeck() {
@@ -47,13 +45,13 @@ function Deck({ deckCount = 1 }) {
       setDeck(deckResult.data);
       setIsLoading(false);
     }
-    
+
     fetchNewDeck();
   }, []);
-  
-  /** Fetches a new card when shouldDraw is true */  
+
+  /** Fetches a new card when shouldDraw is true */
   useEffect(function fetchNewCardOnClick() {
-    
+
     async function fetchNewCard() {
       console.debug("fetchNewCard: deck=", deck);
       const cardResult = await axios.get(`${BASE_URL}/${deck.deck_id}/draw/?count=1`);
@@ -70,7 +68,7 @@ function Deck({ deckCount = 1 }) {
             }
           ]
         });
-      } 
+      }
       console.debug("fetchNewCard after axios deck= ", deck);
       // prevent drawing on next re-render
       setShouldDraw(false);
@@ -79,14 +77,26 @@ function Deck({ deckCount = 1 }) {
     if (shouldDraw) fetchNewCard();
   }, [shouldDraw]);
 
-  /** Draw a card from cards in state */  
+  /** Draw a card from cards in state */
   function handleDrawCard(evt) {
     setShouldDraw(true);
   }
 
+  let renderCards = (
+    cards.map(card => (
+      <Card
+        key={card.id}
+        card={card}
+      />
+    ))
+  );
+
+  if (isLoading) return <i>Loading...</i>;
+  
   return (
     <div className="Deck">
       <button onClick={handleDrawCard}>Gimme a card!</button>
+      <div>{renderCards}</div>
     </div>
   )
 }

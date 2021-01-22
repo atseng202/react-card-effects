@@ -1,6 +1,11 @@
 import './App.css';
 import Deck from './Deck';
 
+/** 
+ * App -> DeckGame -> Deck -> [Card, ...]
+ *
+ **/  
+
 function App() {
   return (
     <div className="App">
@@ -10,8 +15,3 @@ function App() {
 }
 
 export default App;
-
-/** 
- * App -> DeckGame -> Deck -> [Card, ...]
- *
- **/  
